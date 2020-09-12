@@ -6,11 +6,20 @@ import AttachFile from '@material-ui/icons/AttachFile';
 import MoreVert from '@material-ui/icons/MoreVert';
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import MicIcon from '@material-ui/icons/Mic';
+import axios from '../../helpers/axios';
 
-export default function Chat(){
+export default function Chat({ messages }){
     const [input, setInput] = useState('');
-    const sendMessage = () => {
+    const sendMessage = async (e) => {
+        e.preventDefault();
         console.log('message sent!');
+        await axios.post('/message/new', {
+            name: 'mandar',
+            message: input,
+            timestamp: new Date().toISOString(),
+            received: true
+        })
+        setInput('');
     }
     return (
         <div className="chat">
@@ -34,60 +43,26 @@ export default function Chat(){
             </div>
 
             <div className="chat_body">
-                <p className="chat_message">
-                    <span className="chat_name">Sonny</span>
-                    Tis is Messahe
-                    <span className="chat_timestamp">
-                        {new Date().toUTCString()}</span>    
-                </p>
-
-                <p className="chat_message">
-                    <span className="chat_name">Sonny</span>
-                    Tis is Messahe
-                    <span className="chat_timestamp">
-                        {new Date().toUTCString()}</span>    
-                </p>
-
-                <p className="chat_message chat_reciever">
-                    <span className="chat_name">Vicky</span>
-                    Hello
-                    <span className="chat_timestamp">
-                        {new Date().toUTCString()}</span>    
-                </p>
-
-                <p className="chat_message">
-                    <span className="chat_name">Sonny</span>
-                    Tis is Messahe
-                    <span className="chat_timestamp">
-                        {new Date().toUTCString()}</span>    
-                </p>
-
-                <p className="chat_message chat_reciever">
-                    <span className="chat_name">Vicky</span>
-                    How u?
-                    <span className="chat_timestamp">
-                        {new Date().toUTCString()}</span>    
-                </p>
-                <p className="chat_message">
-                    <span className="chat_name">Sonny</span>
-                    Tis is Messahe
-                    <span className="chat_timestamp">
-                        {new Date().toUTCString()}</span>    
-                </p>
-
-                <p className="chat_message">
-                    <span className="chat_name">Sonny</span>
-                    Tis is Messahe
-                    <span className="chat_timestamp">
-                        {new Date().toUTCString()}</span>    
-                </p>
-
-                <p className="chat_message chat_reciever">
-                    <span className="chat_name">Vicky</span>
-                    Hello
-                    <span className="chat_timestamp">
-                        {new Date().toUTCString()}</span>    
-                </p>
+                {
+                    messages.map((message, i) => {
+                        return (
+                            <p key={i}className={ message.received ? "chat_message": "chat_message chat_reciever"}>
+                            <span className="chat_name">{message.name}</span>
+                            {message.message}
+                            <span className="chat_timestamp">
+                                {message.timestamp}</span>    
+                        </p> 
+                        )
+                    })
+                }
+                {
+                    //<p className="chat_message chat_reciever">
+                    //<span className="chat_name">Vicky</span>
+                    //Hello
+                    //<span className="chat_timestamp">
+                    //    {new Date().toUTCString()}</span>    
+                    //</p>
+                }
             </div>
             <div className="chat_footer">
                 <InsertEmoticonIcon />
